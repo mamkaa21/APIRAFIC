@@ -32,8 +32,6 @@ namespace APIRAFIC.Controllers
                 return NotFound("Вы ввели неверный логин или пароль. Пожалуйста проверьте еще раз введенные данные");
             }
             return check;
-
-
         }
 
         [HttpPost("ChangeOldPassword")]
@@ -59,8 +57,8 @@ namespace APIRAFIC.Controllers
                 await _context.SaveChangesAsync();
                 return Ok("Пароль успешно изменен");
             }
-
-
         }
+
+
     }
 }
