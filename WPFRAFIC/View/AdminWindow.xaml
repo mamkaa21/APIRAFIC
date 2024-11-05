@@ -1,0 +1,39 @@
+﻿<Window x:Class="WPFRAFIC.View.AdminWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFRAFIC.View"
+        xmlns:vm="clr-namespace:WPFRAFIC.ViewModel"
+        xmlns:m="clr-namespace:WPFRAFIC.Model"
+        mc:Ignorable="d"
+        Title="AdminWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="Сотрудники">
+                <MenuItem Header="Добавить" Command="{Binding OpenAddNewEmployee}"/>
+                <MenuItem Header="Изменить" Command="{Binding OpenEditEmployee}"/>
+            </MenuItem>
+            <MenuItem Header="Статистика отеля" Command="{Binding OpenStatistic}"/>
+            <MenuItem Header="Расписание работ">
+                <MenuItem Header="Изменить" Command="{Binding OpenEditSchedule}"/>
+            </MenuItem> 
+            <MenuItem Header="Задачи" Command="{Binding OpenTasks}"/>
+        </Menu>
+        <ListView ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee}" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Firstname}"/>
+                    <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding Lastname}"/>
+                   <GridViewColumn Header="Логин" DisplayMemberBinding="{Binding Login}"/>
+                    <GridViewColumn Header="Пароль" DisplayMemberBinding="{Binding Password}"/>
+                    <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding IsBlocked}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

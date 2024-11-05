@@ -1,5 +1,4 @@
 ﻿
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +15,7 @@ namespace WPFRAFIC.ViewModel
     public class LoginWindowVM: BaseVM
     {
         HttpClient httpClient = new HttpClient();
-        //public string Login {  get; set; }
-        //public string Password { get; set; }
+        
         public Employee Employee { get; set; } = new Employee();
         public CommandVM LogIn { get; }
         public LoginWindowVM()

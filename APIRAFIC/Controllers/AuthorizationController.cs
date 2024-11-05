@@ -59,6 +59,33 @@ namespace APIRAFIC.Controllers
             }
         }
 
+        [HttpPost("BlockAccountByThreeWrongPassword")]
+        public async Task<ActionResult<Employee>> BlockAccountByThreeWrongPassword(Employee employee)
+        {
+            if (string.IsNullOrEmpty(employee.Login) || string.IsNullOrEmpty(employee.Password))
+                return BadRequest("Введите логин и пароль");
+            var check = await _context.Employees.FirstOrDefaultAsync(s => s.Login == employee.Login
+            && s.Password == employee.Password);
+            int c = 0;
+            if (check == null)
+            {
+                c++;
+                return NotFound("Вы ввели неверный логин или пароль. Пожалуйста проверьте еще раз введенные данные");
+            }
+            if (c == 3)
+            {
+                return Ok("Вы заблокированы. Обратитесь к администратору");
+            }
+            return check;
+
+        }
+
+        //[HttpPost("BlockAccountForNoAuthorizationByMonth")]
+        //public ActionResult<Employee> BlockAccountForNoAuthorizationByMonth(Employee employee)
+        //{
+
+        //}
+
 
     }
 }
