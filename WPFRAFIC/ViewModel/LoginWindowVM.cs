@@ -40,8 +40,29 @@ namespace WPFRAFIC.ViewModel
                 else
                 {
                     var result = await responce.Content.ReadAsStringAsync();
-                    MessageBox.Show("Вы успешно авторизовались");
+                    MessageBox.Show("Вы успешно авторизовались");                
+                }              
+                var responce2 = await httpClient.PostAsync($"Authorization/BlockAccountByThreeWrongPassword", new StringContent(arg, Encoding.UTF8, "application/json"));
+                if (responce2.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    var result2 = await responce2.Content.ReadAsStringAsync();
+                    MessageBox.Show("Ошибка подключения");
+                    return;
                 }
+                if (responce2.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    var result2 = await responce.Content.ReadAsStringAsync();
+                    MessageBox.Show("Вы ввели неверный логин или пароль. Пожалуйста проверьте ещё раз введенные данные");
+                    return;
+                }
+                else
+                {
+                    var result2 = await responce2.Content.ReadAsStringAsync();
+                    MessageBox.Show("Вы заблокированы");
+                    AdminWindow adminWindow = new AdminWindow();
+                    adminWindow.Show();
+                }
+
             });
         }
     }

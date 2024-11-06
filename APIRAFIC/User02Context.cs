@@ -65,10 +65,13 @@ public partial class User02Context : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.Login)
                 .HasMaxLength(255)
+                .HasDefaultValueSql("''")
                 .HasColumnName("login");
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
+                .HasDefaultValueSql("''")
                 .HasColumnName("password");
+            entity.Property(e => e.RegistrationDate).HasColumnName("registration_date");
             entity.Property(e => e.RoleId)
                 .HasColumnType("int(11)")
                 .HasColumnName("role_id");

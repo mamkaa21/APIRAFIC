@@ -13,5 +13,7 @@ public partial class Employee
 
     public int? RoleId { get; set; }
 
+    public DateOnly? RegistrationDate { get; set; }
+
     public virtual Role? Role { get; set; }
 }
