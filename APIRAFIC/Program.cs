@@ -14,6 +14,7 @@ namespace APIRAFIC
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<User02Context>();
+            builder.Services.AddSingleton<BlockedUsers>();
 
             var app = builder.Build();
 

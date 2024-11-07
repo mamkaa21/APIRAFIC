@@ -63,6 +63,13 @@ public partial class User02Context : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
+            entity.Property(e => e.IsBlocked)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("is_blocked");
+            entity.Property(e => e.Lastlogin)
+                .HasColumnType("datetime")
+                .HasColumnName("lastlogin");
             entity.Property(e => e.Login)
                 .HasMaxLength(255)
                 .HasDefaultValueSql("''")
@@ -71,7 +78,9 @@ public partial class User02Context : DbContext
                 .HasMaxLength(255)
                 .HasDefaultValueSql("''")
                 .HasColumnName("password");
-            entity.Property(e => e.RegistrationDate).HasColumnName("registration_date");
+            entity.Property(e => e.RegistrationDate)
+                .HasColumnType("datetime")
+                .HasColumnName("registration_date");
             entity.Property(e => e.RoleId)
                 .HasColumnType("int(11)")
                 .HasColumnName("role_id");
