@@ -13,7 +13,11 @@ public partial class Employee
 
     public int? RoleId { get; set; }
 
-    public DateOnly? RegistrationDate { get; set; }
+    public DateTime? RegistrationDate { get; set; }
+
+    public sbyte? IsBlocked { get; set; }
+
+    public DateTime? Lastlogin { get; set; }
 
     public virtual Role? Role { get; set; }
 }

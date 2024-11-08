@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WPFRAFIC.View;
 using WPFRAFIC.Model;
+using System.Net.Http.Json;
 
 namespace WPFRAFIC.ViewModel
 {
@@ -25,43 +26,34 @@ namespace WPFRAFIC.ViewModel
             {
                 string arg = JsonSerializer.Serialize(Employee);
                 var responce = await httpClient.PostAsync($"Authorization/CheckAccountIsExist", new StringContent(arg, Encoding.UTF8, "application/json"));
-                if (responce.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    var result = await responce.Content.ReadAsStringAsync();
-                    MessageBox.Show("Ошибка подключения");
-                    return;
-                }
+               
                 if (responce.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     var result = await responce.Content.ReadAsStringAsync();
-                    MessageBox.Show("Вы ввели неверный логин или пароль. Пожалуйста проверьте ещё раз введенные данные");
+                    MessageBox.Show("Вы ввели неверный логин или пароль. Пожалуйста проверьте ещё раз введенные данные. Помните, у вас есть три попытки ввести верный пароль.");
                     return;
+                }
+                if(responce.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    var result = await responce.Content.ReadAsStringAsync();
+                    MessageBox.Show("Вы заблокированы. Обратитесь к администратору.");
+                    return;
+                }
+                if (responce.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var result = await responce.Content.ReadFromJsonAsync<Employee>();
+                    MessageBox.Show("Вы успешно авторизовались");
+
+                    NewPasswordWindow newPasswordWindow = new NewPasswordWindow(result);
+                    newPasswordWindow.Show();
                 }
                 else
                 {
                     var result = await responce.Content.ReadAsStringAsync();
-                    MessageBox.Show("Вы успешно авторизовались");                
-                }              
-                var responce2 = await httpClient.PostAsync($"Authorization/BlockAccountByThreeWrongPassword", new StringContent(arg, Encoding.UTF8, "application/json"));
-                if (responce2.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    var result2 = await responce2.Content.ReadAsStringAsync();
                     MessageBox.Show("Ошибка подключения");
                     return;
-                }
-                if (responce2.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    var result2 = await responce.Content.ReadAsStringAsync();
-                    MessageBox.Show("Вы ввели неверный логин или пароль. Пожалуйста проверьте ещё раз введенные данные");
-                    return;
-                }
-                else
-                {
-                    var result2 = await responce2.Content.ReadAsStringAsync();
-                    MessageBox.Show("Вы заблокированы");
-                    AdminWindow adminWindow = new AdminWindow();
-                    adminWindow.Show();
-                }
+                }              
+                
 
             });
         }

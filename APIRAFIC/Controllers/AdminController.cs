@@ -41,6 +41,20 @@ namespace APIRAFIC.Controllers
             return Ok("Сотрудник обновлен");
         }
 
+        [HttpPost("UnblockEmployee")]
+        public async Task<ActionResult<Employee>> UnblockEmployee(Employee employee)
+        {
+            var user = await _context.Employees.FirstOrDefaultAsync(s => s.Login == employee.Login);
+            user.IsBlocked = 0;
+            await _context.SaveChangesAsync();
+            return Ok("Сотрудник разблокирован!");
+        }
 
+        [HttpPost("GetEmployees")]
+        public async Task<IEnumerable<EmployeeModel>> GetEmployee()
+        {
+            var employees = _context.Employees.Include(s => s.Role).Where(s=>s.RoleId == 2).OrderByDescending(s=>s.Id).ToList();
+            return employees.Select(s => (EmployeeModel)s); ;
+        }
     }
 }
