@@ -6,8 +6,12 @@
         xmlns:local="clr-namespace:WPFRAFIC.View"
         xmlns:vm="clr-namespace:WPFRAFIC.ViewModel"
         xmlns:m="clr-namespace:WPFRAFIC.Model"
+        DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
-        Title="AdminWindow" Height="450" Width="800">
+        Title="AdminWindow" MinHeight="450" MinWidth="800">
+    <Window.Resources>
+        <vm:AdminWindowVM x:Key="vm"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -27,11 +31,12 @@
         <ListView ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee}" Grid.Row="1">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Firstname}"/>
-                    <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding Lastname}"/>
+
                    <GridViewColumn Header="Логин" DisplayMemberBinding="{Binding Login}"/>
                     <GridViewColumn Header="Пароль" DisplayMemberBinding="{Binding Password}"/>
                     <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding IsBlocked}"/>
+                    <GridViewColumn Header="Дата регистрации" DisplayMemberBinding="{Binding RegistrationDate}"/>
+                    <GridViewColumn Header="Дата последнего входа" DisplayMemberBinding="{Binding Lastlogin}"/>
                 </GridView>
             </ListView.View>
         </ListView>

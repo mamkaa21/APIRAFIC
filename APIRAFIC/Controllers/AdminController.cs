@@ -51,10 +51,10 @@ namespace APIRAFIC.Controllers
         }
 
         [HttpPost("GetEmployees")]
-        public async Task<IEnumerable<EmployeeModel>> GetEmployee()
+        public async Task<List<Employee>> GetEmployees()
         {
-            var employees = _context.Employees.Include(s => s.Role).Where(s=>s.RoleId == 2).OrderByDescending(s=>s.Id).ToList();
-            return employees.Select(s => (EmployeeModel)s); ;
+            var employees = _context.Employees.Include(s => s.Role).Where(s=>s.RoleId == 2).ToList();
+            return employees;
         }
     }
 }

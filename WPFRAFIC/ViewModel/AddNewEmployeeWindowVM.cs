@@ -15,7 +15,7 @@ namespace WPFRAFIC.ViewModel
     {
         HttpClient httpClient = new HttpClient();
         public Employee Employee { get; set; } = new Employee();
-        public List<Employee> Employees { get; set; } = new List<Employee>();
+        //public List<Employee> Employees { get; set; } = new List<Employee>();
         public CommandVM AddNewEmployee { get; }
         public AddNewEmployeeWindowVM()
         {

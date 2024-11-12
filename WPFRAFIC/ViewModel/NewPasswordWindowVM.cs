@@ -60,10 +60,9 @@ namespace WPFRAFIC.ViewModel
                     }
                     else
                     {
-                        MainWindow mainWindow = new MainWindow();
-                        mainWindow.Show();
+                        EmployeeWindow employeeWindow = new EmployeeWindow();
+                        employeeWindow.Show();
                     }
-
                 }
                 else
                 {

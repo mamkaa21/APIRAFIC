@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WPFRAFIC.View;
 using WPFRAFIC.ViewModel;
+using WPFRAFIC.Model;
 
 namespace WPFRAFIC.View
 {

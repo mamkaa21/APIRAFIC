@@ -41,11 +41,24 @@ namespace WPFRAFIC.ViewModel
                 }
                 if (responce.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    var result = await responce.Content.ReadFromJsonAsync<Employee>();
+                    Employee = await responce.Content.ReadFromJsonAsync<Employee>();
                     MessageBox.Show("Вы успешно авторизовались");
-
-                    NewPasswordWindow newPasswordWindow = new NewPasswordWindow(result);
-                    newPasswordWindow.Show();
+                    if (Employee.Lastlogin == null)
+                    {
+                        NewPasswordWindow newPasswordWindow = new NewPasswordWindow(Employee);
+                        newPasswordWindow.Show();
+                    }
+                    if (Employee.RoleId == 1)
+                    {
+                        AdminWindow adminWindow = new AdminWindow();
+                        adminWindow.Show();
+                    }
+                    else
+                    {
+                        EmployeeWindow employeeWindow = new EmployeeWindow();
+                        employeeWindow.Show();
+                    }
+                    
                 }
                 else
                 {
