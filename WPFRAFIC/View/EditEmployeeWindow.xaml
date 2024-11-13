@@ -3,10 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:m="clr-namespace:WPFRAFIC.Model"
+        xmlns:vm="clr-namespace:WPFRAFIC.ViewModel"
         xmlns:local="clr-namespace:WPFRAFIC.View"
+        DataContext="{DynamicResource vm}"
         mc:Ignorable="d"
         Title="EditEmployeeWindow" Height="450" Width="800">
+    <Window.Resources>
+        <vm:EditEmployeeWindowVM x:Key="vm"/>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="Изменение данных работника" Style="{DynamicResource LabelForBigTitleStyle}"/>
+        <Label Content="Логин" Style="{DynamicResource LabelForMiniTitleStyle}" Grid.Row="1"/>
+        <TextBox Text="{Binding Employee.Login}" Style="{DynamicResource TextBoxForEntryStyle}" Grid.Row="2"/>
+        <Label Content="Пароль" Style="{DynamicResource LabelForMiniTitleStyle}" Grid.Row="4"/>
+        <TextBox Text="{Binding Employee.Password}" Style="{DynamicResource TextBoxForEntryStyle}" Grid.Row="5"/>
+        <Button Content="Сохранить" Grid.Row="6" Style="{DynamicResource ButtonForActionStyle}" Command="{Binding EditNewEmployee}"/>
     </Grid>
 </Window>

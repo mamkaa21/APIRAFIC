@@ -16,6 +16,8 @@ namespace WPFRAFIC.ViewModel
     public class NewPasswordWindowVM : BaseVM
     {
         HttpClient httpClient = new HttpClient();
+        NewPasswordWindow newPasswordWindow;
+
         private Employee employee;
 
         public Employee Employee
@@ -52,16 +54,20 @@ namespace WPFRAFIC.ViewModel
                 if (responce.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var result = await responce.Content.ReadAsStringAsync();
-                    MessageBox.Show(result.ToString());
+                    MessageBox.Show(result.ToString());           
                     if (Employee.RoleId == 1)
                     {
+
                         AdminWindow adminWindow = new AdminWindow();
                         adminWindow.Show();
+                        newPasswordWindow.Close();
                     }
                     else
                     {
+
                         EmployeeWindow employeeWindow = new EmployeeWindow();
                         employeeWindow.Show();
+                        newPasswordWindow.Close();
                     }
                 }
                 else
@@ -72,6 +78,10 @@ namespace WPFRAFIC.ViewModel
                 }
 
             });
+        }
+        internal void SetWindow(NewPasswordWindow newPasswordWindow)
+        {
+           this.newPasswordWindow = newPasswordWindow;
         }
     }
 }

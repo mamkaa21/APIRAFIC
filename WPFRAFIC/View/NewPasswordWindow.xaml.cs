@@ -26,6 +26,7 @@ namespace WPFRAFIC.View
         {
             InitializeComponent();
             ((NewPasswordWindowVM)DataContext).Employee = employee;
+            ((NewPasswordWindowVM)DataContext).SetWindow(this);
         }
     }
 }

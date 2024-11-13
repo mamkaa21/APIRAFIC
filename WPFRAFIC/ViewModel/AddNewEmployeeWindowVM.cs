@@ -8,14 +8,15 @@ using WPFRAFIC.Model;
 using System.Net.Http;
 using System.Text.Json;
 using System.Windows;
+using System.Runtime.InteropServices;
 
 namespace WPFRAFIC.ViewModel
 {
-    public class AddNewEmployeeWindowVM
+    public class AddNewEmployeeWindowVM: BaseVM
     {
         HttpClient httpClient = new HttpClient();
+        AddNewEmployeeWindow addNewEmployeeWindow;
         public Employee Employee { get; set; } = new Employee();
-        //public List<Employee> Employees { get; set; } = new List<Employee>();
         public CommandVM AddNewEmployee { get; }
         public AddNewEmployeeWindowVM()
         {
@@ -33,9 +34,16 @@ namespace WPFRAFIC.ViewModel
                 else
                 {
                     var result = await responce.Content.ReadAsStringAsync();
-                    MessageBox.Show("Сотрудник успешно добавлен");                  
+                    Signal(nameof(Employee));
+                    MessageBox.Show("Сотрудник успешно добавлен");
+                    addNewEmployeeWindow.Close();
                 }              
             });
+        }
+
+        internal void SetWindow(AddNewEmployeeWindow addNewEmployeeWindow)
+        {
+            this.addNewEmployeeWindow = addNewEmployeeWindow;
         }
     }
 }

@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WPFRAFIC.Model;
+using WPFRAFIC.ViewModel;
 
 namespace WPFRAFIC.View
 {
@@ -19,9 +21,11 @@ namespace WPFRAFIC.View
     /// </summary>
     public partial class EditEmployeeWindow : Window
     {
-        public EditEmployeeWindow()
+        public EditEmployeeWindow(Employee employee)
         {
             InitializeComponent();
+            ((EditEmployeeWindowVM)DataContext).Employee = employee;
+            ((EditEmployeeWindowVM)DataContext).SetWindow(this);
         }
     }
 }

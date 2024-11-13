@@ -18,6 +18,7 @@ namespace WPFRAFIC.ViewModel
         HttpClient httpClient = new HttpClient();
         
         public Employee Employee { get; set; } = new Employee();
+        LoginWindow loginWindow;
         public CommandVM LogIn { get; }
         public LoginWindowVM()
         {
@@ -47,20 +48,29 @@ namespace WPFRAFIC.ViewModel
                     {
                         NewPasswordWindow newPasswordWindow = new NewPasswordWindow(Employee);
                         newPasswordWindow.Show();
-                    }
-                    if (Employee.RoleId == 1)
-                    {
-                        AdminWindow adminWindow = new AdminWindow();
-                        adminWindow.Show();
+                        loginWindow.Close();
                     }
                     else
                     {
-                        EmployeeWindow employeeWindow = new EmployeeWindow();
-                        employeeWindow.Show();
+                        if (Employee.RoleId == 1)
+                        {
+                            AdminWindow adminWindow = new AdminWindow();
+                            adminWindow.Show();
+                            loginWindow.Close();
+
+                        }
+                        else
+                        {
+                            EmployeeWindow employeeWindow = new EmployeeWindow();
+                            employeeWindow.Show();
+                            loginWindow.Close();
+                        }
                     }
+                    
                     
                 }
                 else
+                
                 {
                     var result = await responce.Content.ReadAsStringAsync();
                     MessageBox.Show("Ошибка подключения");
@@ -69,6 +79,11 @@ namespace WPFRAFIC.ViewModel
                 
 
             });
+        }
+
+        internal void SetWindow(LoginWindow loginWindow)
+        {
+            this.loginWindow = loginWindow;
         }
     }
 }

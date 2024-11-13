@@ -18,14 +18,18 @@ namespace APIRAFIC.Controllers
         }
 
         [HttpPost("AddNewEmployee")]
-        public async Task<ActionResult<Employee>> AddNewEmployee(Employee employee)
+        public async Task<ActionResult<Employee>> AddNewEmployee(EmployeeModel employee)
         {
-            if (string.IsNullOrEmpty(employee.Login))
+            var newEmployee = new Employee { Id = employee.Id, IsBlocked = employee.IsBlocked, Lastlogin = employee.Lastlogin, Login = employee.Login, Password = employee.Password, RegistrationDate = employee.RegistrationDate, RoleId = employee.RoleId };
+
+            if (string.IsNullOrEmpty(newEmployee.Login))
                 return BadRequest("Вы не ввели логин");
-            var check = await _context.Employees.FirstOrDefaultAsync(s => s.Login == employee.Login);
+            var check = await _context.Employees.FirstOrDefaultAsync(s => s.Login == newEmployee.Login);
             if (check == null)
             {
-                _context.Employees.Add(employee);
+                newEmployee.RoleId = 2;
+                newEmployee.RegistrationDate = DateTime.Now;
+                _context.Employees.Add(newEmployee);
                 await _context.SaveChangesAsync();
                 return Ok("Новый сотрудник добавлен");
             }
@@ -34,17 +38,19 @@ namespace APIRAFIC.Controllers
         }
 
         [HttpPost("EditEmployee")]
-        public async Task<ActionResult<Employee>> EditEmployee(Employee employee)
+        public async Task<ActionResult<Employee>> EditEmployee(EmployeeModel employee)
         {
-            _context.Employees.Update(employee); 
+            var newEmployee = new Employee { Id = employee.Id, IsBlocked = employee.IsBlocked, Lastlogin = employee.Lastlogin, Login = employee.Login, Password = employee.Password, RegistrationDate = employee.RegistrationDate, RoleId = employee.RoleId };
+            _context.Employees.Update(newEmployee); 
             await _context.SaveChangesAsync();
             return Ok("Сотрудник обновлен");
         }
 
         [HttpPost("UnblockEmployee")]
-        public async Task<ActionResult<Employee>> UnblockEmployee(Employee employee)
+        public async Task<ActionResult<Employee>> UnblockEmployee(EmployeeModel employee)
         {
-            var user = await _context.Employees.FirstOrDefaultAsync(s => s.Login == employee.Login);
+            var newEmployee = new Employee { Id = employee.Id, IsBlocked = employee.IsBlocked, Lastlogin = employee.Lastlogin, Login = employee.Login, Password = employee.Password, RegistrationDate = employee.RegistrationDate, RoleId = employee.RoleId  };
+            var user = await _context.Employees.FirstOrDefaultAsync(s => s.Login == newEmployee.Login);
             user.IsBlocked = 0;
             await _context.SaveChangesAsync();
             return Ok("Сотрудник разблокирован!");

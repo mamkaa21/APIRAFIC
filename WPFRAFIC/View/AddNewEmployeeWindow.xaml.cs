@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WPFRAFIC.ViewModel;
 
 namespace WPFRAFIC.View
 {
@@ -22,6 +23,7 @@ namespace WPFRAFIC.View
         public AddNewEmployeeWindow()
         {
             InitializeComponent();
+            ((AddNewEmployeeWindowVM)DataContext).SetWindow(this);
         }
     }
 }

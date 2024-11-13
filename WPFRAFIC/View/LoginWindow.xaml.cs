@@ -25,6 +25,7 @@ namespace WPFRAFIC.View
         public LoginWindow()
         {
             InitializeComponent();
+            ((LoginWindowVM)DataContext).SetWindow(this);
         }
     }
 }

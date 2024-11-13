@@ -21,6 +21,7 @@
             <MenuItem Header="Сотрудники">
                 <MenuItem Header="Добавить" Command="{Binding OpenAddNewEmployee}"/>
                 <MenuItem Header="Изменить" Command="{Binding OpenEditEmployee}"/>
+                <MenuItem Header="Разблокировать" Command="{Binding UnblockEmployee}"/>
             </MenuItem>
             <MenuItem Header="Статистика отеля" Command="{Binding OpenStatistic}"/>
             <MenuItem Header="Расписание работ">
@@ -31,10 +32,9 @@
         <ListView ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee}" Grid.Row="1">
             <ListView.View>
                 <GridView>
-
-                   <GridViewColumn Header="Логин" DisplayMemberBinding="{Binding Login}"/>
+                    <GridViewColumn Header="Логин" DisplayMemberBinding="{Binding Login}"/>
                     <GridViewColumn Header="Пароль" DisplayMemberBinding="{Binding Password}"/>
-                    <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding IsBlocked}"/>
+                    <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding Blocked}"/>
                     <GridViewColumn Header="Дата регистрации" DisplayMemberBinding="{Binding RegistrationDate}"/>
                     <GridViewColumn Header="Дата последнего входа" DisplayMemberBinding="{Binding Lastlogin}"/>
                 </GridView>
