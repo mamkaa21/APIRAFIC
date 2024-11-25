@@ -11,7 +11,7 @@ public partial class Employee
 
     public string Password { get; set; } = null!;
 
-    public int? RoleId { get; set; }
+    public int RoleId { get; set; }
 
     public DateTime? RegistrationDate { get; set; }
 
@@ -29,7 +29,7 @@ public partial class EmployeeModel
 
     public string Password { get; set; } = null!;
 
-    public int? RoleId { get; set; }
+    public int RoleId { get; set; }
 
     public DateTime? RegistrationDate { get; set; }
 

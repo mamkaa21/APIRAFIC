@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.Eventing.Reader;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace APIRAFIC.Controllers
 {
@@ -9,6 +15,7 @@ namespace APIRAFIC.Controllers
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
+      
         readonly User02Context _context;
         private readonly BlockedUsers blockedUsers;
 
@@ -19,14 +26,14 @@ namespace APIRAFIC.Controllers
         }
 
         [HttpPost("CheckAccountIsExist")]
-        public async Task<ActionResult<Employee>> CheckAccountIsExist(EmployeeModel employee)
+        public async Task<ActionResult<ResponceTokenAndEmployee>> CheckAccountIsExist(EmployeeModel employee)
         {
             var newEmployee = new Employee { Id = employee.Id, IsBlocked = employee.IsBlocked, Lastlogin = employee.Lastlogin, Login = employee.Login, Password = employee.Password, RegistrationDate = employee.RegistrationDate, RoleId = employee.RoleId };
 
             if (string.IsNullOrEmpty(newEmployee.Login) || string.IsNullOrEmpty(newEmployee.Password))
                 return BadRequest("Введите логин и пароль");
 
-            var user = await _context.Employees.FirstOrDefaultAsync(s => s.Login == newEmployee.Login);
+            var user = await _context.Employees.Include(s=>s.Role).FirstOrDefaultAsync(s => s.Login == newEmployee.Login);
             if (user == null)
                 return NotFound("Такой пользователь не найден. Проверьте введенные данные.");
             else
@@ -51,11 +58,51 @@ namespace APIRAFIC.Controllers
                         user.Lastlogin = DateTime.Now;
                         await _context.SaveChangesAsync();
                     }
-                    return Ok(user);
+                    string role = user.Role.Title;
+                    int id = user.Id;
+
+                    var claims = new List<Claim> 
+                    {
+                        new Claim(ClaimValueTypes.Integer32, id.ToString()),
+                        new Claim(ClaimTypes.Role, role)
+                    };
+                    var jwt = new JwtSecurityToken(
+                   issuer: AuthOptions.ISSUER,
+                   audience: AuthOptions.AUDIENCE,
+                   //кладём полезную нагрузку
+                   claims: claims,
+                    //устанавливаем время жизни токена 2 минуты
+                   expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
+                   signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+                    string token = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+                    return Ok(new ResponceTokenAndEmployee
+                    {
+                        Token = token,
+                        Role = role
+                    });
                 }
             }
         }
 
+        public class ResponceTokenAndEmployee
+        {
+            public string Token { get; set; }
+            public string Role { get; set; }
+
+            public Employee Employee { get; set; }
+        }
+        public class AuthOptions
+        {
+            public const string ISSUER = "MyAuthServer"; // издатель токена
+            public const string AUDIENCE = "MyAuthClient"; // потребитель токена
+            const string KEY = "mysupersecret_secretsecretsecretkey!123";   // ключ для шифрации
+            public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
+        }
+
+        [Authorize(Roles = "Администратор")]
         [HttpPost("ChangeOldPassword")]
         public async Task<ActionResult> ChangeOldPassword(CheckPassword check)
         {

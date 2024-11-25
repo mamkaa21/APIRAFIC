@@ -13,7 +13,6 @@ namespace WPFRAFIC.ViewModel
 {
     public class EditEmployeeWindowVM : BaseVM
     {
-        HttpClient httpClient = new HttpClient();
         EditEmployeeWindow editEmployeeWindow;
 
         private Employee employee;
@@ -29,11 +28,10 @@ namespace WPFRAFIC.ViewModel
         public CommandVM EditNewEmployee { get; }
         public EditEmployeeWindowVM()
         {
-            httpClient.BaseAddress = new Uri("http://localhost:5062/api/");
             EditNewEmployee = new CommandVM(async () =>
             {
                 string arg = JsonSerializer.Serialize(Employee);
-                var responce = await httpClient.PostAsync($"Admin/EditEmployee", new StringContent(arg, Encoding.UTF8, "application/json"));
+                var responce = await HttpClientSingle.HttpClient.PostAsync($"Admin/EditEmployee", new StringContent(arg, Encoding.UTF8, "application/json"));
                 if (responce.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     var result = await responce.Content.ReadAsStringAsync();

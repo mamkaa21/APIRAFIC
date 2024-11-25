@@ -15,18 +15,15 @@ namespace WPFRAFIC.ViewModel
 {
     public class LoginWindowVM: BaseVM
     {
-        HttpClient httpClient = new HttpClient();
-        
         public Employee Employee { get; set; } = new Employee();
         LoginWindow loginWindow;
         public CommandVM LogIn { get; }
         public LoginWindowVM()
         {
-            httpClient.BaseAddress = new Uri("http://localhost:5062/api/");
             LogIn = new CommandVM(async () =>
             {
                 string arg = JsonSerializer.Serialize(Employee);
-                var responce = await httpClient.PostAsync($"Authorization/CheckAccountIsExist", new StringContent(arg, Encoding.UTF8, "application/json"));
+                var responce = await HttpClientSingle.HttpClient.PostAsync($"Authorization/CheckAccountIsExist", new StringContent(arg, Encoding.UTF8, "application/json"));
                
                 if (responce.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {

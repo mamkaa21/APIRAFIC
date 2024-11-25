@@ -16,7 +16,6 @@ namespace WPFRAFIC.ViewModel
 {
     public class AdminWindowVM : BaseVM
     {
-        HttpClient httpClient = new HttpClient();
         private Employee employee;
         public Employee Employee
         {
@@ -48,7 +47,6 @@ namespace WPFRAFIC.ViewModel
         JsonSerializerOptions options = new JsonSerializerOptions();
         public AdminWindowVM()
         {
-            httpClient.BaseAddress = new Uri("http://localhost:5062/api/");
             options = new JsonSerializerOptions { ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles, PropertyNameCaseInsensitive = true };
             GetEmployees();
             OpenAddNewEmployee = new CommandVM(() =>
@@ -65,7 +63,7 @@ namespace WPFRAFIC.ViewModel
             UnblockEmployee = new CommandVM(async () =>
             {
                 string arg = JsonSerializer.Serialize(Employee);
-                var responce = await httpClient.PostAsync($"Admin/UnblockEmployee", new StringContent(arg, Encoding.UTF8, "application/json"));
+                var responce = await HttpClientSingle.HttpClient.PostAsync($"Admin/UnblockEmployee", new StringContent(arg, Encoding.UTF8, "application/json"));
                 if (responce.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     var result = await responce.Content.ReadAsStringAsync();
@@ -84,7 +82,7 @@ namespace WPFRAFIC.ViewModel
         }
         public async void GetEmployees()
         {
-            var responce = await httpClient.PostAsync($"Admin/GetEmployees", new StringContent("", Encoding.UTF8, "application/json"));
+            var responce = await HttpClientSingle.HttpClient.PostAsync($"Admin/GetEmployees", new StringContent("", Encoding.UTF8, "application/json"));
             if (responce.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 var result = await responce.Content.ReadAsStringAsync();

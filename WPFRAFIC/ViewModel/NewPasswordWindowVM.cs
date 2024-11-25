@@ -15,7 +15,6 @@ namespace WPFRAFIC.ViewModel
 {
     public class NewPasswordWindowVM : BaseVM
     {
-        HttpClient httpClient = new HttpClient();
         NewPasswordWindow newPasswordWindow;
 
         private Employee employee;
@@ -34,11 +33,11 @@ namespace WPFRAFIC.ViewModel
         public CommandVM ChangePassword { get; }
         public NewPasswordWindowVM()
         {
-            httpClient.BaseAddress = new Uri("http://localhost:5062/api/");
+           
             ChangePassword = new CommandVM(async () =>
             {
                 string arg = JsonSerializer.Serialize(CheckPassword);
-                var responce = await httpClient.PostAsync($"Authorization/ChangeOldPassword", new StringContent(arg, Encoding.UTF8, "application/json"));
+                var responce = await HttpClientSingle.HttpClient.PostAsync($"Authorization/ChangeOldPassword", new StringContent(arg, Encoding.UTF8, "application/json"));
                 if (responce.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     var result = await responce.Content.ReadAsStringAsync();

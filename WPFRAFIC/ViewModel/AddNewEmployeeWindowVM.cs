@@ -14,17 +14,15 @@ namespace WPFRAFIC.ViewModel
 {
     public class AddNewEmployeeWindowVM: BaseVM
     {
-        HttpClient httpClient = new HttpClient();
         AddNewEmployeeWindow addNewEmployeeWindow;
         public Employee Employee { get; set; } = new Employee();
         public CommandVM AddNewEmployee { get; }
         public AddNewEmployeeWindowVM()
         {
-            httpClient.BaseAddress = new Uri("http://localhost:5062/api/");
             AddNewEmployee = new CommandVM(async () =>
             {
                 string arg = JsonSerializer.Serialize(Employee);
-                var responce = await httpClient.PostAsync($"Admin/AddNewEmployee", new StringContent(arg, Encoding.UTF8, "application/json"));
+                var responce = await HttpClientSingle.HttpClient.PostAsync($"Admin/AddNewEmployee", new StringContent(arg, Encoding.UTF8, "application/json"));
                 if (responce.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     var result = await responce.Content.ReadAsStringAsync();
