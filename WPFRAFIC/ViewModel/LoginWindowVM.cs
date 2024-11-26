@@ -16,6 +16,7 @@ namespace WPFRAFIC.ViewModel
     public class LoginWindowVM: BaseVM
     {
         public Employee Employee { get; set; } = new Employee();
+        public ResponceTokenAndEmployee ResponceTokenAndEmployee {  get; set; } 
         LoginWindow loginWindow;
         public CommandVM LogIn { get; }
         public LoginWindowVM()
@@ -39,7 +40,10 @@ namespace WPFRAFIC.ViewModel
                 }
                 if (responce.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Employee = await responce.Content.ReadFromJsonAsync<Employee>();
+                    var answer = await responce.Content.ReadFromJsonAsync<ResponceTokenAndEmployee>();
+                    HttpClientSingle.SetToken(answer.Token);
+                    Employee = answer.Employee;
+
                     MessageBox.Show("Вы успешно авторизовались");
                     if (Employee.Lastlogin == null)
                     {
@@ -65,9 +69,8 @@ namespace WPFRAFIC.ViewModel
                     }
                     
                     
-                }
-                else
-                
+                }      
+                else 
                 {
                     var result = await responce.Content.ReadAsStringAsync();
                     MessageBox.Show("Ошибка подключения");
@@ -78,6 +81,7 @@ namespace WPFRAFIC.ViewModel
             });
         }
 
+       
         internal void SetWindow(LoginWindow loginWindow)
         {
             this.loginWindow = loginWindow;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
@@ -16,7 +17,7 @@ namespace APIRAFIC.Controllers
         {
             this._context = _context;
         }
-
+        [Authorize(Roles = "admin")]
         [HttpPost("AddNewEmployee")]
         public async Task<ActionResult<Employee>> AddNewEmployee(EmployeeModel employee)
         {
@@ -37,6 +38,7 @@ namespace APIRAFIC.Controllers
                 return BadRequest("Такой аккаунт уже существует");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("EditEmployee")]
         public async Task<ActionResult<Employee>> EditEmployee(EmployeeModel employee)
         {
@@ -46,6 +48,7 @@ namespace APIRAFIC.Controllers
             return Ok("Сотрудник обновлен");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("UnblockEmployee")]
         public async Task<ActionResult<Employee>> UnblockEmployee(EmployeeModel employee)
         {
@@ -56,6 +59,7 @@ namespace APIRAFIC.Controllers
             return Ok("Сотрудник разблокирован!");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("GetEmployees")]
         public async Task<List<Employee>> GetEmployees()
         {

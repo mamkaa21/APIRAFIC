@@ -15,7 +15,7 @@ namespace APIRAFIC.Controllers
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
-      
+
         readonly User02Context _context;
         private readonly BlockedUsers blockedUsers;
 
@@ -25,6 +25,7 @@ namespace APIRAFIC.Controllers
             this.blockedUsers = blockedUsers;
         }
 
+        
         [HttpPost("CheckAccountIsExist")]
         public async Task<ActionResult<ResponceTokenAndEmployee>> CheckAccountIsExist(EmployeeModel employee)
         {
@@ -32,8 +33,8 @@ namespace APIRAFIC.Controllers
 
             if (string.IsNullOrEmpty(newEmployee.Login) || string.IsNullOrEmpty(newEmployee.Password))
                 return BadRequest("Введите логин и пароль");
-
-            var user = await _context.Employees.Include(s=>s.Role).FirstOrDefaultAsync(s => s.Login == newEmployee.Login);
+            
+            var user = await _context.Employees.Include(s => s.Role).FirstOrDefaultAsync(s => s.Login == newEmployee.Login);
             if (user == null)
                 return NotFound("Такой пользователь не найден. Проверьте введенные данные.");
             else
@@ -61,26 +62,27 @@ namespace APIRAFIC.Controllers
                     string role = user.Role.Title;
                     int id = user.Id;
 
-                    var claims = new List<Claim> 
+                    var claims = new List<Claim>
                     {
-                        new Claim(ClaimValueTypes.Integer32, id.ToString()),
+                        new Claim(ClaimTypes.NameIdentifier, id.ToString()),
                         new Claim(ClaimTypes.Role, role)
                     };
                     var jwt = new JwtSecurityToken(
-                   issuer: AuthOptions.ISSUER,
-                   audience: AuthOptions.AUDIENCE,
-                   //кладём полезную нагрузку
-                   claims: claims,
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE,
+                    //кладём полезную нагрузку
+                    claims: claims,
                     //устанавливаем время жизни токена 2 минуты
-                   expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
-                   signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+                    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
                     string token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
                     return Ok(new ResponceTokenAndEmployee
                     {
                         Token = token,
-                        Role = role
+                        Role = role,
+                        Employee = user
                     });
                 }
             }
@@ -102,11 +104,17 @@ namespace APIRAFIC.Controllers
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
         }
 
-        [Authorize(Roles = "Администратор")]
+        [Authorize(Roles = "admin, loh")]
         [HttpPost("ChangeOldPassword")]
         public async Task<ActionResult> ChangeOldPassword(CheckPassword check)
         {
-            var user = await _context.Employees.FirstOrDefaultAsync(s => s.Id == check.IdEmployee);
+            var test = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(test))
+                return BadRequest();
+            if (!int.TryParse(test, out int userid))
+                return BadRequest();
+
+            var user = await _context.Employees.FirstOrDefaultAsync(s => s.Id == userid);
             if (user == null)
                 return NotFound("Такого пользователя нет");
             else
